@@ -1,11 +1,6 @@
 pipeline {
     agent any
     
-    tools {
-        maven 'Maven'
-        jdk 'JDK11'
-    }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -18,14 +13,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo "=== Compilation du projet ==="
-                bat 'mvn clean compile'
+                sh 'mvn clean compile'
             }
         }
         
         stage('Test') {
             steps {
                 echo "=== Exécution des tests ==="
-                bat 'mvn test'
+                sh 'mvn test'
             }
             post {
                 always {
@@ -37,7 +32,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo "=== Création du package JAR ==="
-                bat 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
         }
         
@@ -55,10 +50,6 @@ pipeline {
         }
         failure {
             echo "❌ Le pipeline a échoué pour la branche ${env.BRANCH_NAME}"
-        }
-        always {
-            echo "=== Nettoyage ==="
-            cleanWs()
         }
     }
 }
